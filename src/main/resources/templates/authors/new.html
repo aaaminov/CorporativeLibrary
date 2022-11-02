@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">   
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый автор</title>
+</head>
+<body>
+    <a href="/authors">Назад</a>
+    <hr>
+    <form method="post" th:action="@{/authors}" th:object="${author}">
+        <label for="surname">Фамилия: </label>
+        <input type="text" th:field="*{surname}" id="surname">
+        <br>
+        <br>
+        <label for="name">Имя: </label>
+        <input type="text" th:field="*{name}" id="name">
+        <br>
+        <br>
+        <label for="patronymic">Отчество: </label>
+        <input type="text" th:field="*{patronymic}" id="patronymic">
+        <br>
+        <br>
+        <input class="btn" type="submit" value="Создать">
+    </form>
+</body>
+<style>
+    a {
+        color: black;
+        font-size: medium;
+    }
+    .btn {
+        text-decoration: solid;
+        background-color: #e6e6e6;
+        margin: 16px 0px;
+        padding: 4px 8px;
+        border: black solid 1px;
+        border-radius: 8px;
+    }
+</style>
+</html>
