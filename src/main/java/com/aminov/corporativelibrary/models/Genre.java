@@ -14,44 +14,34 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Author {
+public class Genre {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String surname;
     private String name;
-    private String patronymic;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "author_book",
-        joinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"),
+    @JoinTable(name = "genre_book",
+        joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id")) // referencedColumnName = "vendor_code"
     private Set<Book> books = new HashSet<>(); // 0 или несколько
 
-    
-    public Author() {}
-    
-    public Author(String surname, String name, String patronymic) {
-        this.surname = surname;
+
+    public Genre() { }
+
+    public Genre(String name) {
         this.name = name;
-        this.patronymic = patronymic;
-    }
-
-
-    public String getFIO(){
-        return surname + " " + name + " " + patronymic;
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", surname='" + getSurname() + "'" +
             ", name='" + getName() + "'" +
-            ", patronymic='" + getPatronymic() + "'" +
             "}";
     }
+
 
     public Long getId() {
         return this.id;
@@ -59,14 +49,6 @@ public class Author {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSurname() {
-        return this.surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public String getName() {
@@ -77,16 +59,8 @@ public class Author {
         this.name = name;
     }
 
-    public String getPatronymic() {
-        return this.patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
 
 
-    
     public Set<Book> getBooks() {
         return (this.books);
     }
@@ -94,14 +68,14 @@ public class Author {
     public void addBook(Book book){
         if (!books.contains(book)) {
             books.add(book);
-            book.addAuthor(this);
+            book.addGenre(this);
         }
     }
 
     public void removeBook(Book book){
-        if (books.contains(book)) { // && book.getAuthors().size() >= 2) { // чтобы осталось минимум 1
+        if (books.contains(book)) { // && book.getGenres().size() >= 2) { // чтобы осталось минимум 1
             books.remove(book);
-            book.removeAuthor(this);
+            book.removeGenre(this);
         }
     }
 
