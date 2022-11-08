@@ -9,11 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="`USER`") // чтобы название не конфликтило с ключевыми словами
+@Table(name="`USER`") // чтобы название не конфликтило с ключевыми словами SQL
 public class User {
     
     @Id
@@ -24,6 +26,10 @@ public class User {
     private String patronymic;
     private Long foreign_id;
 
+    @ManyToOne()
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role; // только 1
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении "книги у пользователя" из пользователя, он удалится и из БД
     private Set<UserBook> user_books = new HashSet<>(); // 0 или несколько
 
@@ -33,11 +39,12 @@ public class User {
 
     public User() { }
 
-    public User(String surname, String name, String patronymic, Long foreign_id) {
+    public User(String surname, String name, String patronymic, Long foreign_id, Role role) {
         this.surname = surname;
         this.name = name;
         this.patronymic = patronymic;
         this.foreign_id = foreign_id;
+        this.role = role;
     }
 
 
@@ -82,6 +89,19 @@ public class User {
     }
 
 
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public void setRole(Role role) {
+        if (this.role != role) {
+            if (this.role != null)
+                this.role.removeUser(this); // убрать привязку у старого объекта
+            this.role = role;
+            this.role.addUser(this);
+        }
+    }
 
     public Set<UserBook> getUserBooks() {
         return (this.user_books);

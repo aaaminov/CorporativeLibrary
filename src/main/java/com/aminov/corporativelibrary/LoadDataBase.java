@@ -14,6 +14,7 @@ import com.aminov.corporativelibrary.models.BookType;
 import com.aminov.corporativelibrary.models.Comment;
 import com.aminov.corporativelibrary.models.Genre;
 import com.aminov.corporativelibrary.models.Library;
+import com.aminov.corporativelibrary.models.Role;
 import com.aminov.corporativelibrary.models.User;
 import com.aminov.corporativelibrary.models.UserBook;
 import com.aminov.corporativelibrary.repositories.AuthorRepository;
@@ -22,6 +23,7 @@ import com.aminov.corporativelibrary.repositories.BookTypeRepository;
 import com.aminov.corporativelibrary.repositories.CommentRepository;
 import com.aminov.corporativelibrary.repositories.GenreRepository;
 import com.aminov.corporativelibrary.repositories.LibraryRepository;
+import com.aminov.corporativelibrary.repositories.RoleRepository;
 import com.aminov.corporativelibrary.repositories.UserBookRepository;
 import com.aminov.corporativelibrary.repositories.UserRepository;
 
@@ -38,6 +40,7 @@ public class LoadDataBase {
         CommentRepository commentRepository,
         GenreRepository genreRepository,
         LibraryRepository libraryRepository,
+        RoleRepository roleRepository,
         UserRepository userRepository,
         UserBookRepository userBookRepository) {
         return args -> {
@@ -59,8 +62,15 @@ public class LoadDataBase {
             Library l2 = libraryRepository.save(new Library("Школьная", "г. Уфа, ул. Пушкина, д. 2"));
             Library l3 = libraryRepository.save(new Library("Университетская", "г. Уфа, ул. Пушкина, д. 3"));
 
-            User u1 = userRepository.save(new User("Aminov", "Arslan", "Gaynetdinovich", 1L));
-            User u2 = userRepository.save(new User("Jackson", "Michael", "Joseph", 0L));
+            Role r1 = roleRepository.save(new Role("Читатель"));
+            Role r2 = roleRepository.save(new Role("Менеджер"));
+
+            User u1 = userRepository.save(new User("Aminov", "Arslan", "Gaynetdinovich", 1L, r1));
+            User u2 = userRepository.save(new User("Jackson", "Michael", "Joseph", 0L, r1));
+
+            //проверка обновления роли пользователя
+            u1.setRole(r2);
+            userRepository.save(u1);
 
             // создание книг, пока без связей с авторам, жанрами и др., но сразу с сохранением в БД, чтобы был id, 
             // т.к без него при каждом их обновлении в БД создается новая строка, а не обновляется старая
