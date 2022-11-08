@@ -43,10 +43,10 @@ public class Book {
     @JoinColumn(name = "library_id", nullable = false)
     private Library library; // только 1
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении "книги у пользователя" из книги, он удалится и из БД
     private Set<UserBook> user_books = new HashSet<>(); // 0 или несколько
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении комментария у книги, он удалится и из БД
     private Set<Comment> comments = new HashSet<>(); // 0 или несколько
 
 
@@ -149,17 +149,17 @@ public class Book {
         return (this.authors);
     }
 
-    public void addAuthor(Author author){
+    public void addAuthor(Author author){  // вызывается из класса Author
         if (!authors.contains(author)){
             authors.add(author);
-            author.addBook(this);
+            //author.addBook(this);
         }
     }
 
-    public void removeAuthor(Author author){
-        if (authors.contains(author) && authors.size() >= 2){ // чтобы осталось минимум 1
+    public void removeAuthor(Author author){ // вызывается из класса Author
+        if (authors.contains(author)) {
             authors.remove(author);
-            author.removeBook(this);
+            //author.removeBook(this);
         }
     }
 
@@ -168,17 +168,17 @@ public class Book {
         return (this.genres);
     }
 
-    public void addGenre(Genre genre) {
+    public void addGenre(Genre genre) { // вызывается из класса Genre
         if (!genres.contains(genre)){
             genres.add(genre);
-            genre.addBook(this);
-            System.out.println();
-            System.out.println(this.toString());
-            System.out.println();
+            // genre.addBook(this);
+            // // System.out.println();
+            // // System.out.println(this.toString());
+            // // System.out.println();
         }
     }
-    public void removeGenre(Genre genre){
-        if (genres.contains(genre) && genres.size() >= 2){ // чтобы осталось минимум 1
+    public void removeGenre(Genre genre){ // вызывается из класса Genre
+        if (genres.contains(genre)){
             genres.remove(genre);
             genre.removeBook(this);
         }
@@ -207,11 +207,11 @@ public class Book {
     public void addUserBook(UserBook user_book){
         if (!user_books.contains(user_book)){
             user_books.add(user_book);
-            user_book.setBook(this);
+            //user_book.setBook(this);
         }
     }
 
-    public void removeUserBook(UserBook user_book){ // вызывается из класса UserBook
+    public void removeUserBook(UserBook user_book){
         if (user_books.contains(user_book)){
             user_books.remove(user_book);
         }
@@ -225,11 +225,11 @@ public class Book {
     public void addComment(Comment comment) {
         if (!comments.contains(comment)){
             comments.add(comment);
-            comment.setBook(this);
+            //comment.setBook(this);
         }
     }
 
-    public void removeComment(Comment comment){ // вызывается из класса Comment
+    public void removeComment(Comment comment){
         if (comments.contains(comment)){
             comments.remove(comment);
         }

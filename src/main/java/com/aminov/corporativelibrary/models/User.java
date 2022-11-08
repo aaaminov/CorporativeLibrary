@@ -3,6 +3,7 @@ package com.aminov.corporativelibrary.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,10 +24,10 @@ public class User {
     private String patronymic;
     private Long foreign_id;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении "книги у пользователя" из пользователя, он удалится и из БД
     private Set<UserBook> user_books = new HashSet<>(); // 0 или несколько
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении комментария у пользователя, он удалится и из БД
     private Set<Comment> comments = new HashSet<>(); // (скорее всего) 0 или несколько
 
 
@@ -89,11 +90,11 @@ public class User {
     public void addUserBook(UserBook user_book){
         if (!user_books.contains(user_book)){
             user_books.add(user_book);
-            user_book.setUser(this);
+            //user_book.setUser(this);
         }
     }
 
-    public void removeUserBook(UserBook user_book){ // вызывается из класса UserBook
+    public void removeUserBook(UserBook user_book){
         if (user_books.contains(user_book)){
             user_books.remove(user_book);
         }
@@ -107,11 +108,11 @@ public class User {
     public void addComment(Comment comment) {
         if (!comments.contains(comment)){
             comments.add(comment);
-            comment.setUser(this);
+            //comment.setUser(this);
         }
     }
 
-    public void removeComment(Comment comment){ // вызывается из класса Comment
+    public void removeComment(Comment comment){
         if (comments.contains(comment)){
             comments.remove(comment);
         }

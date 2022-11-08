@@ -1,0 +1,21 @@
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+a, input[type=submit] {
+    color: black;
+    font-size: medium;
+}
+
+.btn {
+    text-decoration: solid;
+    background-color: #fafafa;
+    margin: 16px 0px;
+    padding: 4px 8px;
+    border: black solid 1px;
+    border-radius: 8px;
+}
+
+.inline {
+    display: inline;
+}

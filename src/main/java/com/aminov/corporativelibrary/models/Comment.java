@@ -2,6 +2,7 @@ package com.aminov.corporativelibrary.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,11 +16,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // только 1
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book; // только 1
 
@@ -49,28 +50,28 @@ public class Comment {
         return this.user;
     }
 
-    public void setUser(User user) {
-        if (this.user != user){
-            if (this.user != null)
-                this.user.removeComment(this); // убрать привязку у старого объекта
-            this.user = user;
-            this.user.addComment(this);
-        }
-    }
+    // public void setUser(User user) {
+    //     if (this.user != user){
+    //         if (this.user != null)
+    //             this.user.removeComment(this); // убрать привязку у старого объекта
+    //         this.user = user;
+    //         this.user.addComment(this);
+    //     }
+    // }
 
 
     public Book getBook() {
         return this.book;
     }
 
-    public void setBook(Book book) {
-        if (this.book != book) {
-            if (this.book != null)
-                this.book.removeComment(this); // убрать привязку у старого объекта
-            this.book = book;
-            this.book.addComment(this);
-        }
-    }
+    // public void setBook(Book book) {
+    //     if (this.book != book) {
+    //         if (this.book != null)
+    //             this.book.removeComment(this); // убрать привязку у старого объекта
+    //         this.book = book;
+    //         this.book.addComment(this);
+    //     }
+    // }
 
 
 

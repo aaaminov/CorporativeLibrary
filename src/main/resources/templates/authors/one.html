@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <title>Автор</title>
 </head>
 <body>
     <a href="/authors">Назад</a>
     <hr>
-    <label>ID: </label>
-    <p th:text="${author.getId()}">id</p>
-    <label>ФИО: </label>
-    <p th:text="${author.getFIO()}">fio</p>
+    <div>
+        <p class="inline">ID: </p>
+        <p class="inline" th:text="${author.getId()}">id</p>
+    </div>
+    <div>
+        <p class="inline">ФИО: </p>
+        <p class="inline" th:text="${author.getFIO()}">fio</p>
+    </div>
     <br>
     <a class="btn" th:href="@{/authors/{id}/edit (id=${author.getId()})}">Изменить</a>
     <br>
@@ -20,18 +26,4 @@
         <input class="btn" type="submit" value="Удалить"/>
     </form>
 </body>
-<style>
-    a, input[type=submit] {
-        color: black;
-        font-size: medium;
-    }
-    .btn {
-        text-decoration: solid;
-        background-color: #e6e6e6;
-        margin: 16px 0px;
-        padding: 4px 8px;
-        border: black solid 1px;
-        border-radius: 8px;
-    }
-</style>
 </html>

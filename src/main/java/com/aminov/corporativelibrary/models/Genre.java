@@ -21,10 +21,10 @@ public class Genre {
     private Long id;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "genre_book",
-        joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id")) // referencedColumnName = "vendor_code"
+        joinColumns = @JoinColumn(name = "genre_id"), //referencedColumnName = "id"
+        inverseJoinColumns = @JoinColumn(name = "book_id")) // referencedColumnName = "id"
     private Set<Book> books = new HashSet<>(); // 0 или несколько
 
 
@@ -73,7 +73,7 @@ public class Genre {
     }
 
     public void removeBook(Book book){
-        if (books.contains(book)) { // && book.getGenres().size() >= 2) { // чтобы осталось минимум 1
+        if (books.contains(book) && book.getGenres().size() >= 2) { // чтобы осталось минимум 1
             books.remove(book);
             book.removeGenre(this);
         }

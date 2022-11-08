@@ -23,10 +23,10 @@ public class Author {
     private String name;
     private String patronymic;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "author_book",
-        joinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id")) // referencedColumnName = "vendor_code"
+        joinColumns = @JoinColumn(name = "author_id"), // referencedColumnName = "id"
+        inverseJoinColumns = @JoinColumn(name = "book_id")) // referencedColumnName = "id"
     private Set<Book> books = new HashSet<>(); // 0 или несколько
 
     
@@ -99,7 +99,7 @@ public class Author {
     }
 
     public void removeBook(Book book){
-        if (books.contains(book)) { // && book.getAuthors().size() >= 2) { // чтобы осталось минимум 1
+        if (books.contains(book) && book.getAuthors().size() >= 2) { // чтобы осталось минимум 1
             books.remove(book);
             book.removeAuthor(this);
         }
