@@ -26,7 +26,7 @@ public class Author {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "author_book",
         joinColumns = @JoinColumn(name = "author_id"), // referencedColumnName = "id"
-        inverseJoinColumns = @JoinColumn(name = "book_id")) // referencedColumnName = "id"
+        inverseJoinColumns = @JoinColumn(name = "book_vendor_code", referencedColumnName = "vendor_code")) // referencedColumnName = "id"
     private Set<Book> books = new HashSet<>(); // 0 или несколько
 
     

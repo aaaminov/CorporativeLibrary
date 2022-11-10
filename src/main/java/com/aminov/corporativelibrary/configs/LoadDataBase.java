@@ -76,13 +76,13 @@ public class LoadDataBase {
 
             // создание книг, пока без связей с авторам, жанрами и др., но сразу с сохранением в БД, чтобы был id, 
             // т.к без него при каждом их обновлении в БД создается новая строка, а не обновляется старая
-            Book b1 = bookRepository.save(new Book("K-001", "Капитанская дочка", "крутое описание", "-", "-", bt3, l2));
-            Book b2 = bookRepository.save(new Book("M-001", "Муму", "крутое описание2", "-", "-", bt1, l1));
-            Book b3 = bookRepository.save(new Book("4-001", "451 градус по Фаренгейту", "крутое описание3", "-", "-", bt1, l3));
-            Book b4 = bookRepository.save(new Book("W-001", "Война и мир", "крутое описание4", "-", "-", bt1, l2));
-            Book b5 = bookRepository.save(new Book("W-001", "Война и мир", "крутое описание5", "-", "-", bt1, l3));
-            Book b6 = bookRepository.save(new Book("W-001", "Война и мир", "крутое описание5", "-", "-", bt2, l3));
-            Book b7 = bookRepository.save(new Book("4-001", "451 градус по Фаренгейту", "крутое описание3", "-", "-", bt2, l3));
+            Book b1 = bookRepository.save(new Book("Капитанская дочка", "крутое описание", "-", "-", bt3, l2)); // "K-001", 
+            Book b2 = bookRepository.save(new Book("Муму", "крутое описание2", "-", "-", bt1, l1));
+            Book b3 = bookRepository.save(new Book("451 градус по Фаренгейту", "крутое описание3", "-", "-", bt1, l3));
+            Book b4 = bookRepository.save(new Book("Война и мир", "крутое описание4", "-", "-", bt1, l2));
+            Book b5 = bookRepository.save(new Book("Война и мир", "крутое описание5", "-", "-", bt1, l3));
+            Book b6 = bookRepository.save(new Book("Война и мир", "крутое описание5", "-", "-", bt2, l3));
+            Book b7 = bookRepository.save(new Book("451 градус по Фаренгейту", "крутое описание3", "-", "-", bt2, l3));
 
             // добавление книг к авторам
             a1.addBook(b1);

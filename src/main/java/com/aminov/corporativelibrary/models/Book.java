@@ -10,18 +10,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
+// @IdClass(BookKey.class)
 public class Book {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String vendor_code;
+    private Long vendor_code;
     private String title;
     
     @Column(length = 500)
@@ -52,8 +53,8 @@ public class Book {
 
     public Book() {}
 
-    public Book(String vendor_code, String title, String description, String cover_link, String file_link, BookType book_type, Library library) {
-        this.vendor_code = vendor_code;
+    public Book(String title, String description, String cover_link, String file_link, BookType book_type, Library library) {
+        // this.vendor_code = vendor_code;
         this.title = title;
         this.description = description;
         this.cover_link = cover_link;
@@ -65,8 +66,8 @@ public class Book {
     @Override
     public String toString() {
         return "Book = {" +
-            " id='" + getId() + "'" +
-            ", vendor_code='" + getVendor_code() + "'" +
+            // " id='" + getId() + "'" +
+            ", vendor_code='" + getVendorCode() + "'" +
             ", title='" + getTitle() + "'" +
             ", description='" + getDescription() + "'" +
             ", cover_link='" + getCover_link() + "'" +
@@ -81,19 +82,28 @@ public class Book {
     }
 
 
+    // public Long getId() {
+    //     return this.id;
+    // }
+
+    // public void setId(Long id) {
+    //     this.id = id;
+    // }
+
     public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getVendor_code() {
         return this.vendor_code;
     }
 
-    public void setVendor_code(String vendor_code) {
+    public void setId(Long vendor_code) {
+        this.vendor_code = vendor_code;
+    }
+
+
+    public Long getVendorCode() {
+        return this.vendor_code;
+    }
+
+    public void setVendorCode(Long vendor_code) {
         this.vendor_code = vendor_code;
     }
 

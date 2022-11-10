@@ -44,7 +44,7 @@ public class User implements UserDetails{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении "книги у пользователя" из пользователя, он удалится и из БД
     private Set<UserBook> user_books = new HashSet<>(); // 0 или несколько
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении комментария у пользователя, он удалится и из БД
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // при удалении комментария у пользователя, он удалится и из БД
     private Set<Comment> comments = new HashSet<>(); // (скорее всего) 0 или несколько
 
 

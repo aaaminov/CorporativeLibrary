@@ -23,7 +23,7 @@ public class UserBook {
     private User user; // только 1
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_vendor_code", nullable = false)
     private Book book; // только 1
 
     private Date issue_date;

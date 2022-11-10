@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Все книги</title>
+</head>
+<body>
+    <a href="/book/new">Создать новую книгу</a>
+    <hr>
+    <div>
+        <form th:method="get" th:action="@{/book/search}">
+            <label for="title">title: </label>
+            <input name="title" type="text" th:value="${title}" id="input_title">
+            <a class="btn inline" onclick="reset_title()">Убрать</a>
+            <br>
+            <label for="author">author: </label>
+            <select name="author_id" multiple="multiple" id="select_authors">
+                <option th:if="${author_ids == null}"
+                    th:each="author : ${authors}"
+                    th:value="${author.getId()}"
+                    th:text="${author.getFIO()}">fio
+                </option>
+                <option th:if="${author_ids != null}"
+                    th:each="author : ${authors}"
+                    th:selected="${author_ids != null && author_ids.contains(author.getId())}"
+                    th:value="${author.getId()}"
+                    th:text="${author.getFIO()}">fio
+                </option>
+            </select>
+            <a class="btn inline" onclick="reset_authors()">Убрать</a>
+            <br>
+            <br>
+            <label for="genre">genre: </label>
+            <select name="genre_id" id="select_genre">
+                <option value="0" th:selected="${genre_id == null}">Все жанры</option>
+                <option th:if="${genre_id == null}"
+                    th:each="genre : ${genres}"
+                    th:value="${genre.getId()}"
+                    th:text="${genre.getName()}">name
+                </option>
+                <option th:if="${genre_id != null}"
+                    th:each="genre : ${genres}"
+                    th:selected="${genre_id == genre.getId()}"
+                    th:value="${genre.getId()}"
+                    th:text="${genre.getName()}">name
+                </option>
+            </select>
+            <a class="btn inline" onclick="reset_genre()">Убрать</a>
+            <br>
+            <br>
+            <input class="btn" type="submit" value="Search">
+        </form>
+    </div>
+    <hr>
+    <p>Найдено <span th:text="${count_books}"></span> книг</p>
+    <div th:each="book : ${books}">
+        <a th:href="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}" th:text="${book.getTitle()}">title</a>
+    </div>
+</body>
+<script>
+    input_title = document.getElementById("input_title");
+    select_authors = document.getElementById("select_authors");
+    select_genre = document.getElementById("select_genre");
+
+    // reset_title();
+    
+    // reset_authors();
+    // reset_genre();
+
+    function reset_title() {
+        input_title.value = "";
+    }
+    function reset_authors() {
+        select_authors.selectedIndex = -1;
+    }
+
+    function reset_genre() {
+        select_genre.selectedIndex = 0;
+    }
+
+</script>
+</html>

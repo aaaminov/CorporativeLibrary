@@ -30,7 +30,7 @@ a.btn, input[type=submit] {
 }
 
 .btn.edit:hover {
-    background-color: #ccffcc;
+    /* background-color: #ccffcc; */
 }
 
 .btn.delete:hover {

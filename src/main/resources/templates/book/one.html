@@ -9,12 +9,12 @@
     <title>Автор</title>
 </head>
 <body>
-    <a href="/books/search">Назад</a>
+    <a href="/book/search">Назад</a>
     <hr>
     <h4>Книга:</h4>
     <div>
-        <p class="inline">ID: </p>
-        <p class="inline" th:text="${book.getId()}">id</p>
+        <p class="inline">Артикул: </p>
+        <p class="inline" th:text="${book.getVendorCode()}">vendor_code</p>
     </div>
     <div>
         <p class="inline">Название: </p>
@@ -23,28 +23,28 @@
     <br>
     <p class="inline">Авторы: </p>
     <div th:each="author : ${book.authors}">
-        <a class="inline" th:href="@{/authors/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
+        <a class="inline" th:href="@{/authors/{id} (id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
     </div>
     <br>
     <p class="inline">Жанры: </p>
     <div th:each="genre : ${book.genres}">
-        <a class="inline" th:href="@{/genres/{id}(id=${genre.getId()})}" th:text="${genre.getName()}">name</a>
+        <a class="inline" th:href="@{/genres/{id} (id=${genre.getId()})}" th:text="${genre.getName()}">name</a>
     </div>
     <br>
-    <a class="btn edit" th:href="@{/book/{id}/edit (id=${book.getId()})}">Изменить</a>
-    <form class="inline" th:method="delete" th:action="@{/books/{id} (id=${book.getId()})}">
+    <a class="btn edit" th:href="@{/book/{vendor_code}/edit (vendor_code=${book.getVendorCode()})}">Изменить</a>
+    <form class="inline" th:method="delete" th:action="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}">
         <input class="btn delete" type="submit" value="Удалить"/>
     </form>
     <hr>
     <p class="inline">Комментарии: </p>
-    <form  th:method="post" th:action="@{/books/{id}/new_comment (id=${book.getId()})}">  <!-- th:object="${comment}" -->
-        <input type="text" name="content" id="content"> <!-- th:field="*{content}" -->
+    <form  th:method="post"  th:action="@{/book/{vendor_code}/comments/new (vendor_code=${book.getVendorCode()})}">  <!-- th:object="${comment}" -->
+        <input type="text" name="content" id="content" required> <!-- th:field="*{content}" -->
         <!-- <input type="hidden" th:field="*{user_id}" value="${#authentication.getPrincipal().getUser().getId()"> -->
         <!-- <input type="hidden" th:field="*{book}" value="${book}"> -->
         <input class="btn inline" type="submit" value="Отправить"/>
     </form>
     <br>
-    <div th:each="comment : ${book.comments}">
+    <div th:each="comment : ${book.getComments()}">
         <!-- <a class="inline" th:text="${comment.getUser().getFIO()}">fio</a> -->
         <p class="inline" th:text="${comment.getContent()}">content</p>
         <br>
