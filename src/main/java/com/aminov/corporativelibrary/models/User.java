@@ -1,9 +1,12 @@
 package com.aminov.corporativelibrary.models;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,13 +17,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Table(name="`USER`") // чтобы название не конфликтило с ключевыми словами SQL
-public class User {
+public class User implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    private String login;
+    private String password;
     private String surname;
     private String name;
     private String patronymic;
@@ -39,7 +50,9 @@ public class User {
 
     public User() { }
 
-    public User(String surname, String name, String patronymic, Long foreign_id, Role role) {
+    public User(String login, String password, String surname, String name, String patronymic, Long foreign_id, Role role) {
+        this.login = login;
+        this.password = password;
         this.surname = surname;
         this.name = name;
         this.patronymic = patronymic;
@@ -54,6 +67,22 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getLogin() {
+        return this.login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSurname() {
@@ -136,6 +165,40 @@ public class User {
         if (comments.contains(comment)){
             comments.remove(comment);
         }
+    }
+
+
+    // security
+
+    @Override
+    public String getUsername() {
+        return getLogin();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(getRole().getName());
+		return Arrays.asList(authority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
     
 }

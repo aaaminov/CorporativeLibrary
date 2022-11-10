@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 public class Role {
     
@@ -65,5 +67,11 @@ public class Role {
             users.remove(user);
         }
     }
+
+    // @Override
+    // public String getAuthority() {
+    //     // TODO Auto-generated method stub
+    //     return name;
+    // }
 
 }

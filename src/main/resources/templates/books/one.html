@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <title>Автор</title>
+</head>
+<body>
+    <a href="/books/search">Назад</a>
+    <hr>
+    <h4>Книга:</h4>
+    <div>
+        <p class="inline">ID: </p>
+        <p class="inline" th:text="${book.getId()}">id</p>
+    </div>
+    <div>
+        <p class="inline">Название: </p>
+        <p class="inline" th:text="${book.getTitle()}">fio</p>
+    </div>
+    <br>
+    <p class="inline">Авторы: </p>
+    <div th:each="author : ${book.authors}">
+        <a class="inline" th:href="@{/authors/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
+    </div>
+    <br>
+    <p class="inline">Жанры: </p>
+    <div th:each="genre : ${book.genres}">
+        <a class="inline" th:href="@{/genres/{id}(id=${genre.getId()})}" th:text="${genre.getName()}">name</a>
+    </div>
+    <br>
+    <a class="btn edit" th:href="@{/book/{id}/edit (id=${book.getId()})}">Изменить</a>
+    <form class="inline" th:method="delete" th:action="@{/books/{id} (id=${book.getId()})}">
+        <input class="btn delete" type="submit" value="Удалить"/>
+    </form>
+    <hr>
+    <p class="inline">Комментарии: </p>
+    <form  th:method="post" th:action="@{/books/{id}/new_comment (id=${book.getId()})}">  <!-- th:object="${comment}" -->
+        <input type="text" name="content" id="content"> <!-- th:field="*{content}" -->
+        <!-- <input type="hidden" th:field="*{user_id}" value="${#authentication.getPrincipal().getUser().getId()"> -->
+        <!-- <input type="hidden" th:field="*{book}" value="${book}"> -->
+        <input class="btn inline" type="submit" value="Отправить"/>
+    </form>
+    <br>
+    <div th:each="comment : ${book.comments}">
+        <!-- <a class="inline" th:text="${comment.getUser().getFIO()}">fio</a> -->
+        <p class="inline" th:text="${comment.getContent()}">content</p>
+        <br>
+    </div>
+</body>
+</html>

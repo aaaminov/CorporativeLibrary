@@ -21,8 +21,7 @@
     </div>
     <br>
     <a class="btn" th:href="@{/authors/{id}/edit (id=${author.getId()})}">Изменить</a>
-    <br>
-    <form th:method="delete" th:action="@{/authors/{id} (id=${author.getId()})}">
+    <form class="inline" th:method="delete" th:action="@{/authors/{id} (id=${author.getId()})}">
         <input class="btn" type="submit" value="Удалить"/>
     </form>
 </body>

@@ -40,7 +40,14 @@ public class Author {
 
 
     public String getFIO(){
-        return surname + " " + name + " " + patronymic;
+        String fio = "";
+        if (surname != null)
+            fio += surname + " ";
+        if (name != null)
+            fio += name + " ";
+        if (patronymic != null)
+            fio += patronymic;
+        return fio;
     }
 
     @Override

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Главная</title>
+</head>
+<body>
+    <div class="header">
+        <div sec:authorize="isAnonymous()">
+            <a class="btn" href="/login">Войти</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <form class="inline" th:action="@{/logout}" method="post">
+                <input class="btn" type="submit" value="Выйти"/>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <p sec:authorize="isAnonymous()">Привет, нажмите Войти, чтобы авторизоваться</span></p>
+    <p sec:authorize="isAuthenticated()">Привет, <span sec:authentication="name"></span></p>
+    <a href="/authors">Авторы</a>
+    <br>
+    <a href="/books">Книги</a>
+</body>
+</html>

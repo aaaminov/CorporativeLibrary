@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Все книги</title>
+</head>
+<body>
+    <a href="/books/new">Создать новую книгу</a>
+    <hr>
+    <div>
+        <!-- <form method="get" th:action="@{/books/search}">
+            <div>
+                <label> title: <input name="title" type="text" th:text="${title}"/> </label>
+            </div>
+            <div>
+                <label> author: <input name="author" type="text" th:text="${author}"/> </label>
+            </div>
+            <div>
+                <label> genre: <input name="genre" type="text" th:text="${genre}"/> </label>
+            </div>
+            <input class="btn" type="submit" value="Найти">
+        </form> -->
+        <form th:method="get" th:action="@{/books/search}">
+            <label for="title">title: </label>
+            <input name="title" type="text" th:value="${title}" id="title">
+            <br>
+            <label for="author">author: </label>
+            <input name="author" type="text" th:value="${author}" id="author">
+            <br>
+            <label for="genre">genre: </label>
+            <input name="genre" type="text" th:value="${genre}" id="genre">
+            <!-- <label for="genre">genres: </label>
+            <select multiple th:value="${genres}">
+                <option th:each="genre : ${genres}"
+                    th:value="${genre.getId()}"
+                    th:text="${genre.getName()}"></option>
+            </select> -->
+            <br>
+            <input class="btn" type="submit" value="Search">
+        </form>
+    </div>
+    <hr>
+    <div th:each="book : ${books}">
+        <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getTitle()}">title</a>
+    </div>
+</body>
+</html>

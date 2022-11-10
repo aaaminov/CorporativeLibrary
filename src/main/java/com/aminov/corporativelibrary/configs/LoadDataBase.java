@@ -1,4 +1,4 @@
-package com.aminov.corporativelibrary;
+package com.aminov.corporativelibrary.configs;
 
 import java.util.GregorianCalendar;
 
@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.aminov.corporativelibrary.models.Author;
 import com.aminov.corporativelibrary.models.Book;
@@ -42,7 +43,8 @@ public class LoadDataBase {
         LibraryRepository libraryRepository,
         RoleRepository roleRepository,
         UserRepository userRepository,
-        UserBookRepository userBookRepository) {
+        UserBookRepository userBookRepository,
+        PasswordEncoder encoder) {
         return args -> {
             // создание сущностей, которые пока не зависят друг от друга
             BookType bt1 = bookTypeRepository.save(new BookType("Бумажная"));
@@ -62,11 +64,11 @@ public class LoadDataBase {
             Library l2 = libraryRepository.save(new Library("Школьная", "г. Уфа, ул. Пушкина, д. 2"));
             Library l3 = libraryRepository.save(new Library("Университетская", "г. Уфа, ул. Пушкина, д. 3"));
 
-            Role r1 = roleRepository.save(new Role("Читатель"));
-            Role r2 = roleRepository.save(new Role("Менеджер"));
+            Role r1 = roleRepository.save(new Role("reader"));
+            Role r2 = roleRepository.save(new Role("manager"));
 
-            User u1 = userRepository.save(new User("Aminov", "Arslan", "Gaynetdinovich", 1L, r1));
-            User u2 = userRepository.save(new User("Jackson", "Michael", "Joseph", 0L, r1));
+            User u1 = userRepository.save(new User("aminov", encoder.encode("123456"), "Aminov", "Arslan", "Gaynetdinovich", 0L, r1));
+            User u2 = userRepository.save(new User("jackson", encoder.encode("qwerty"), "Jackson", "Michael", "Joseph", 0L, r1));
 
             //проверка обновления роли пользователя
             u1.setRole(r2);
