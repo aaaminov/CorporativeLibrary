@@ -11,7 +11,7 @@
     <a href="/author/new">Создать нового автора</a>
     <hr>
     <div th:each="author : ${authors}">
-        <a th:href="@{/authors/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
+        <a th:href="@{/author/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
     </div>
 </body>
 </html>

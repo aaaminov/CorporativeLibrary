@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // .mvcMatchers("/authors/**", "/books/**").hasAnyAuthority("reader", "manager")
                 // .mvcMatchers("/authors/edit").hasAuthority("manager")   // не работает
                 // .mvcMatchers("/admin").hasAuthority("manager")
-                .mvcMatchers("/h2-console/**", "/", "/home/**", "/css/**").permitAll()
+                .mvcMatchers("/h2-console/**", "/", "/home/**", "/css/**", "/register/**").permitAll()
                 .anyRequest().authenticated()
             .and()
             .formLogin()

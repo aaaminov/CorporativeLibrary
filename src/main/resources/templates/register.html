@@ -5,12 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Изменение автора</title>
+    <title>Регистрация</title>
 </head>
 <body>
-    <a th:href="@{/author/{id} (id=${author.getId()})}">Назад</a>
+    <div th:if="${param.login_exists}">
+        Пользователь с таким логином уже есть
+    </div>
+    <div th:if="${param.error}">
+        Invalid username or password.
+    </div>
+    <a href="/home">Назад</a>
     <hr>
-    <form th:method="patch" th:action="@{/author/{id} (id=${author.getId()})}" th:object="${author}">
+    <form method="post" th:action="@{/register}" th:object="${user}">
+        <label for="login">Login: </label>
+        <input type="text" th:field="*{login}" id="login">
+        <br>
+        <label for="password">Password: </label>
+        <input type="text" th:field="*{password}" id="password">
+        <br>
         <label for="surname">Фамилия: </label>
         <input type="text" th:field="*{surname}" id="surname">
         <br>
@@ -20,7 +32,7 @@
         <label for="patronymic">Отчество: </label>
         <input type="text" th:field="*{patronymic}" id="patronymic">
         <br>
-        <input class="btn" type="submit" value="Сохранить">
+        <input class="btn" type="submit" value="Создать">
     </form>
 </body>
 </html>

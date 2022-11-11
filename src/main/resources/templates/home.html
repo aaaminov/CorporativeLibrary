@@ -11,6 +11,7 @@
     <div class="header">
         <div sec:authorize="isAnonymous()">
             <a class="btn" href="/login">Войти</a>
+            <a class="btn" href="/register">Зарегистрироваться</a>
         </div>
         <div sec:authorize="isAuthenticated()">
             <form class="inline" th:action="@{/logout}" method="post">

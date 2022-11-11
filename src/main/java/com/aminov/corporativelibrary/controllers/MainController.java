@@ -6,11 +6,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aminov.corporativelibrary.models.User;
+import com.aminov.corporativelibrary.repositories.RoleRepository;
 import com.aminov.corporativelibrary.repositories.UserRepository;
 
 @Controller
@@ -18,11 +20,14 @@ import com.aminov.corporativelibrary.repositories.UserRepository;
 public class MainController {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public MainController(UserRepository userRepository) {
+
+    public MainController(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
-
+    
     
     // главная страница
     @GetMapping("/")
@@ -73,5 +78,32 @@ public class MainController {
     // public String admin(Model model){
     //     return "hello admin";
     // }
+
+    // форма регистрации
+    @GetMapping("/register")
+    public String register(Model model){
+        model.addAttribute("user", new User());
+        return "/register";
+    }
+    
+    // регистрация
+    @PostMapping("/register")
+    public String newUser(@ModelAttribute("user") User user){
+        if (user == null){
+            return null;
+        }
+        if (userRepository.findByLogin(user.getLogin()) != null){
+            return "redirect:/register?login_exists";
+        }
+        if (user.getLogin() == "" || user.getPassword() == ""){
+            return "redirect:/register?error";
+        }
+        user.setRole(roleRepository.findById(1L).get()); // reader
+        user.setForeign_id(0L);
+        userRepository.save(user);
+        return "redirect:/home";
+    }
+    
+    
     
 }

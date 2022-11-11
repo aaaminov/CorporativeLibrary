@@ -8,7 +8,7 @@
     <title>Все пользователи</title>
 </head>
 <body>
-    <a href="/user/new">Создать нового автора</a>
+    <a href="/home">Назад</a>
     <hr>
     <div th:each="user : ${users}">
         <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getFIO()}">fio</a>
