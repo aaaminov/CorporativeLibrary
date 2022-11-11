@@ -14,7 +14,7 @@ import com.aminov.corporativelibrary.models.Author;
 import com.aminov.corporativelibrary.repositories.AuthorRepository;
 
 @Controller
-@RequestMapping("/authors")
+@RequestMapping("/author")
 public class AuthorController {
 
     private final AuthorRepository repository;
@@ -27,7 +27,7 @@ public class AuthorController {
     @GetMapping()
     public String allAuthors(Model model){
         model.addAttribute("authors", repository.findAll());
-        return "authors/all";
+        return "author/all";
     }
     
     // получение формы для создания автора
@@ -35,7 +35,7 @@ public class AuthorController {
     @PreAuthorize("hasAuthority('manager')")
     public String newAuthor(Model model){
         model.addAttribute("author", new Author());
-        return "authors/new";
+        return "author/new";
     }
 
     // создание автора
@@ -46,7 +46,7 @@ public class AuthorController {
             return null;
         }
         repository.save(author);
-        return "redirect:/authors";
+        return "redirect:/author";
     }
 
 
@@ -55,7 +55,7 @@ public class AuthorController {
     @GetMapping("/{id}")
     public String oneAuthor(Model model, @PathVariable("id") Long id){
         model.addAttribute("author", repository.findById(id).get());
-        return "authors/one";
+        return "author/one";
     }
 
     // получение формы для редактирования автора
@@ -63,7 +63,7 @@ public class AuthorController {
     @PreAuthorize("hasAuthority('manager')")
     public String editAuthor(Model model, @PathVariable("id") Long id){
         model.addAttribute("author", repository.findById(id).get());
-        return "authors/edit";
+        return "author/edit";
     }
 
     // обновление автора
@@ -71,7 +71,7 @@ public class AuthorController {
     @PreAuthorize("hasAuthority('manager')")
     public String updateAuthor(@ModelAttribute("author") Author author, @PathVariable("id") Long id){
         repository.save(author);
-        return "redirect:/authors/{id}";
+        return "redirect:/author/{id}";
     }
 
     // удаление автора
@@ -79,7 +79,7 @@ public class AuthorController {
     @PreAuthorize("hasAuthority('manager')")
     public String deleteAuthor(@PathVariable("id") Long id){
         repository.deleteById(id);
-        return "redirect:/authors";
+        return "redirect:/author";
     }
 
 }

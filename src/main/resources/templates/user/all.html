@@ -5,13 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Все авторы</title>
+    <title>Все пользователи</title>
 </head>
 <body>
-    <a href="/authors/new">Создать нового автора</a>
+    <a href="/user/new">Создать нового автора</a>
     <hr>
-    <div th:each="author : ${authors}">
-        <a th:href="@{/authors/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>
+    <div th:each="user : ${users}">
+        <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getFIO()}">fio</a>
     </div>
 </body>
 </html>

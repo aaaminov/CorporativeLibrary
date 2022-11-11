@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">   
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Изменение книги</title>
+</head>
+<body>
+    <a th:href="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}">Назад</a>
+    <hr>
+    <div>
+        <form th:method="patch" th:action="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}" >
+            <label for="title">title: </label>
+            <input name="title" th:value="${title}" type="text" id="input_title">
+            <br>
+            <br>
+            <label for="select_book_type">book_type: </label>
+            <select name="book_type_id" id="select_book_type" required>
+                <option th:each="book_type : ${bookTypeListAll}"
+                    th:selected="${book_type.getId() == book_type_id}"
+                    th:value="${book_type.getId()}"
+                    th:text="${book_type.getName()}">name
+                </option>
+            </select>
+            <br>
+            <br>
+            <label for="select_authors">authors: </label>
+            <select name="author_id" multiple="multiple" id="select_authors" required>
+                <option th:each="author : ${authorsListAll}"
+                    th:selected="${authorsList.contains(author)}"
+                    th:value="${author.getId()}"
+                    th:text="${author.getFIO()}">fio
+                </option>
+            </select>
+            <br>
+            <br>
+            <label for="select_genre">genres: </label>
+            <select name="genre_id" multiple="multiple" id="select_genre" required>
+                <option th:each="genre : ${genresListAll}"
+                    th:selected="${genresList.contains(genre)}"
+                    th:value="${genre.getId()}"
+                    th:text="${genre.getName()}">name
+                </option>
+            </select>
+            <br>
+            <br>
+            <label for="select_library">library: </label>
+            <select name="library_id" id="select_library" required>
+                <option th:each="library : ${libraryListAll}"
+                    th:selected="${library.getId() == library_id}"
+                    th:value="${library.getId()}"
+                    th:text="${library.getName()}">name
+                </option>
+            </select>
+            <br>
+            <br>
+            <input class="btn" type="submit" value="Изменить">
+        </form>
+    </div>
+</body>
+</html>

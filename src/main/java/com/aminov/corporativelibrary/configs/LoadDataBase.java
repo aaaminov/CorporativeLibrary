@@ -117,20 +117,20 @@ public class LoadDataBase {
 
             // добавление "Книг у пользователей"
             UserBook ub1 = userBookRepository.save(new UserBook(u1, b2, 
-                new GregorianCalendar(2022, 10, 5).getTime(), 
-                new GregorianCalendar(2022, 11, 5).getTime()));
+                new GregorianCalendar((2022), (10), (5)).getTime(), 
+                new GregorianCalendar((2022), (11), (5)).getTime()));
             UserBook ub2 = userBookRepository.save(new UserBook(u1, b3, 
-                new GregorianCalendar(2022, 10, 15).getTime(), 
-                new GregorianCalendar(2022, 11, 15).getTime()));
-            UserBook ub3 = userBookRepository.save(new UserBook(u2, b4, 
-                new GregorianCalendar(2022, 10, 2).getTime(), 
-                new GregorianCalendar(2022, 11, 2).getTime()));
+                new GregorianCalendar((2022), (9), (1)).getTime(), 
+                new GregorianCalendar((2022), (10), (1)).getTime()));
+            UserBook ub3 = userBookRepository.save(new UserBook(u2, b3, 
+                new GregorianCalendar((2022), (10), (2)).getTime(), 
+                new GregorianCalendar((2022), (11), (2)).getTime()));
             UserBook ub4 = userBookRepository.save(new UserBook(u2, b4, 
-                new GregorianCalendar(2022, 10, 2).getTime(), 
-                new GregorianCalendar(2022, 11, 2).getTime()));
+                new GregorianCalendar((2022), (10), (2)).getTime(), 
+                new GregorianCalendar((2022), (11), (2)).getTime()));
             UserBook ub5 = userBookRepository.save(new UserBook(u2, b7, 
-                new GregorianCalendar(2022, 10, 4).getTime(), 
-                new GregorianCalendar(2022, 11, 4).getTime()));
+                new GregorianCalendar((2022), (10), (4)).getTime(), 
+                new GregorianCalendar((2022), (11), (4)).getTime()));
                 
             u1.addUserBook(ub1);
             u1.addUserBook(ub2);

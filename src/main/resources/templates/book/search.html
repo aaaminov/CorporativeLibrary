@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Все книги</title>
+    <title>Книги</title>
 </head>
 <body>
     <a href="/book/new">Создать новую книгу</a>
@@ -51,13 +51,15 @@
             <a class="btn inline" onclick="reset_genre()">Убрать</a>
             <br>
             <br>
-            <input class="btn" type="submit" value="Search">
+            <input class="btn" type="submit" value="Поиск">
         </form>
     </div>
     <hr>
     <p>Найдено <span th:text="${count_books}"></span> книг</p>
     <div th:each="book : ${books}">
-        <a th:href="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}" th:text="${book.getTitle()}">title</a>
+        <a th:href="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}">
+            <span th:text="${book.getTitle()}"></span> - <span th:text="${book.getVendorCode()}"></span>
+        </a>
     </div>
 </body>
 <script>

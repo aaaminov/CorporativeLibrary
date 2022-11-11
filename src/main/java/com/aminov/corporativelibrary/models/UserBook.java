@@ -1,5 +1,7 @@
 package com.aminov.corporativelibrary.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -80,7 +82,10 @@ public class UserBook {
 
 
     public Date getIssue_date() {
-        return this.issue_date;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(issue_date);
+        // calendar.add(Calendar.MONTH, -1);
+        return calendar.getTime();
     }
 
     public void setIssue_date(Date issue_date) {
@@ -88,11 +93,25 @@ public class UserBook {
     }
 
     public Date getReturn_date() {
-        return this.return_date;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(return_date);
+        // calendar.add(Calendar.MONTH, -1);
+        // System.out.println("'LOLOL getReturn_date' - " + return_date.toString() + calendar.toString());
+        return calendar.getTime();
     }
 
     public void setReturn_date(Date return_date) {
         this.return_date = return_date;
     }
+
+    
+    public String getIssue_dateStr() {
+        return new SimpleDateFormat("dd.MM.yyyy").format(getIssue_date());
+    }
+
+    public String getReturn_dateStr() {
+        return new SimpleDateFormat("dd.MM.yyyy").format(getReturn_date());
+    }
+
 
 }

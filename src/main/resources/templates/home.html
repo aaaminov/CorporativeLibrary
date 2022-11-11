@@ -21,8 +21,14 @@
     <hr>
     <p sec:authorize="isAnonymous()">Привет, нажмите Войти, чтобы авторизоваться</span></p>
     <p sec:authorize="isAuthenticated()">Привет, <span sec:authentication="name"></span></p>
-    <a href="/authors">Авторы</a>
     <br>
-    <a href="/books">Книги</a>
+    <div th:if="${isAuthorized}">
+        <a href="/book">Книги</a>
+        <div th:if="${role_name == 'manager'}">
+            <a href="/author">Авторы</a>
+            <br>
+            <a href="/user">Пользователи</a>
+        </div>
+    </div>
 </body>
 </html>

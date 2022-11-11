@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">   
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Изменение пользователя</title>
+</head>
+<body>
+    <a th:href="@{/user/{id} (id=${user.getId()})}">Назад</a>
+    <hr>
+    <div>
+        <p class="inline">ID: </p>
+        <p class="inline" th:text="${user.getId()}">id</p>
+    </div>
+    <div>
+        <p class="inline">ФИО: </p>
+        <p class="inline" th:text="${user.getFIO()}">fio</p>
+    </div>
+    <form th:method="patch" th:action="@{/user/{id} (id=${user.getId()})}">
+        <label for="select_role">Роль: </label>
+        <select name="role_id" id="select_role" required>
+            <option th:each="role : ${roleListAll}"
+                th:selected="${role.getId().equals( user.getRole().getId() )}"
+                th:value="${role.getId()}"
+                th:text="${role.getName()}">name
+            </option>
+        </select>
+        <br>
+        <input type="hidden" th:value="${user.getId()}" name="user_id">
+        <input class="btn" type="submit" value="Изменить">
+    </form>
+</body>
+</html>

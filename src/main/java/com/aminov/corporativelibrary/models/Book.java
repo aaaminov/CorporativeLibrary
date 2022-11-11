@@ -244,5 +244,10 @@ public class Book {
             comments.remove(comment);
         }
     }
+
+
+    public String getTitleAndVendorCode(){
+        return title + " - " + String.valueOf(vendor_code);
+    }
     
 }

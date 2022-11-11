@@ -1,6 +1,8 @@
 package com.aminov.corporativelibrary.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aminov.corporativelibrary.models.User;
+import com.aminov.corporativelibrary.repositories.UserRepository;
+
 @Controller
 // @RequestMapping("/")
 public class MainController {
 
-    public MainController() { }
+    private final UserRepository userRepository;
+
+    public MainController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     
     // главная страница
     @GetMapping("/")
@@ -22,6 +32,14 @@ public class MainController {
     
     @GetMapping("/home")
     public String home(Model model){
+        String currentPrincipalName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByLogin(currentPrincipalName);
+        if (user == null){
+            model.addAttribute("isAuthorized", false);
+        } else {
+            model.addAttribute("isAuthorized", true);
+            model.addAttribute("role_name", user.getRole().getName());
+        }
         return "home";
     }
     
@@ -30,11 +48,11 @@ public class MainController {
         return "/login";
     }
     
-    // после авторизации
-    @PostMapping("/login")
-    public String logined(Model model){
-        return "redirect:/home";
-    }
+    // // после авторизации
+    // @PostMapping("/login")
+    // public String logined(Model model){
+    //     return "redirect:/home";
+    // }
     
     // после выхода пользователя
     @PostMapping("/logout")

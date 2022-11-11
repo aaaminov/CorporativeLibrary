@@ -60,6 +60,17 @@ public class User implements UserDetails{
         this.role = role;
     }
 
+    public String getFIO(){
+        String fio = "";
+        if (surname != null)
+            fio += surname + " ";
+        if (name != null)
+            fio += name + " ";
+        if (patronymic != null)
+            fio += patronymic;
+        return fio;
+    }
+
 
     public Long getId() {
         return this.id;

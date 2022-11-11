@@ -5,22 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Изменение автора</title>
+    <title>Новый автор</title>
 </head>
 <body>
-    <a th:href="@{/authors/{id} (id=${author.getId()})}">Назад</a>
+    <a href="/author">Назад</a>
     <hr>
-    <form th:method="patch" th:action="@{/authors/{id} (id=${author.getId()})}" th:object="${author}">
+    <form method="post" th:action="@{/author}" th:object="${author}">
         <label for="surname">Фамилия: </label>
         <input type="text" th:field="*{surname}" id="surname">
+        <br>
         <br>
         <label for="name">Имя: </label>
         <input type="text" th:field="*{name}" id="name">
         <br>
+        <br>
         <label for="patronymic">Отчество: </label>
         <input type="text" th:field="*{patronymic}" id="patronymic">
         <br>
-        <input class="btn" type="submit" value="Изменить">
+        <br>
+        <input class="btn" type="submit" value="Создать">
     </form>
 </body>
 </html>

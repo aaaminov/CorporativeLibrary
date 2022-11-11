@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet" />
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <title>Автор</title>
+    <title th:text="${author.getFIO()}">fio</title>
 </head>
 <body>
-    <a href="/authors">Назад</a>
+    <a href="/author">Назад</a>
     <hr>
     <div>
         <p class="inline">ID: </p>
@@ -20,8 +20,8 @@
         <p class="inline" th:text="${author.getFIO()}">fio</p>
     </div>
     <br>
-    <a class="btn" th:href="@{/authors/{id}/edit (id=${author.getId()})}">Изменить</a>
-    <form class="inline" th:method="delete" th:action="@{/authors/{id} (id=${author.getId()})}">
+    <a class="btn" th:href="@{/author/{id}/edit (id=${author.getId()})}">Изменить</a>
+    <form class="inline" th:method="delete" th:action="@{/author/{id} (id=${author.getId()})}">
         <input class="btn" type="submit" value="Удалить"/>
     </form>
 </body>
