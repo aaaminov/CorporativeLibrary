@@ -8,7 +8,8 @@
     <title>Все авторы</title>
 </head>
 <body>
-    <a href="/author/new">Создать нового автора</a>
+    <a class="mrgn_right" href="/">Назад</a>
+    <a class="inline" href="/author/new">Создать нового автора</a>
     <hr>
     <div th:each="author : ${authors}">
         <a th:href="@{/author/{id}(id=${author.getId()})}" th:text="${author.getFIO()}">fio</a>

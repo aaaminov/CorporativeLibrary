@@ -70,6 +70,11 @@ public class BookController {
         this.userBookRepository = userBookRepository;
     }
 
+    // получение текущего пользователя
+    private User getCurrentUser() {
+        String currentPrincipalName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByLogin(currentPrincipalName);
+    }
 
     @GetMapping("")
     public String home() {
@@ -175,57 +180,119 @@ public class BookController {
 
 
 
+
+
     // получение одной книги
     @GetMapping("/{vendor_code}") // {title}-
     public String oneBook(Model model, @PathVariable("vendor_code") Long vendor_code){ // @PathVariable("title") String title, 
         User user = getCurrentUser();
-        model.addAttribute("isCurrentUserStandingForBook", false);
+        model.addAttribute("user", user);
 
         Book book = repository.findByVendorCode(vendor_code);
         model.addAttribute("book", book);
 
-        Set<UserBook> userBooks = book.getUserBooks();
-        UserBook currentUserBook = null;
-        UserBook lastUserBook = null;
-        Date today = Calendar.getInstance().getTime();
-        Date currentIssueDate = today;
-        Date lastReturnDate = today;
+        model.addAttribute("isAvailable", true);
+        model.addAttribute("isBook_In_CurrentUser", false);
+        model.addAttribute("is_CurrentUser_Standing_For_Book", false);
+        model.addAttribute("isLeasedBook", false);
 
+
+        List<UserBook> userBooks = userBookRepository.findListByBookId(vendor_code);
+
+        Date today = Calendar.getInstance().getTime();
         Long countUsersStandingForBook = 0L;
         for (UserBook userBook : userBooks) {
-            int result1 = userBook.getIssue_date().compareTo(currentIssueDate);
-            int result2 = userBook.getReturn_date().compareTo(lastReturnDate);
-            if (result1 < 0 && result2 >= 0){ // issue_date  is before  lastIssueDate   &&  return_date  is after or today  lastReturnDate
-                lastReturnDate = userBook.getReturn_date();
-                currentUserBook = userBook;
-                lastUserBook = userBook;
-            } else if (result1 >= 1 && result2 >= 0) { // issue_date  is after or today  lastIssueDate   &&  return_date  is after or today  lastReturnDate
-                lastUserBook = userBook; // идут уже те кто в очереди
-                countUsersStandingForBook++;
-                if (user.getId().equals(userBook.getUser().getId())){
-                    model.addAttribute("isCurrentUserStandingForBook", true);
-                    model.addAttribute("idUserBookWhereCurrentUserStandingForBook", userBook.getId());
-                }
-            }
-        }
-
-        model.addAttribute("isAvailable", true);
-        model.addAttribute("isBookInCurrentUser", false);
-
-        if (currentUserBook != null){
-            if (lastReturnDate.compareTo(today) >= 0){ // after or today
+                    System.out.println("Current Book's return date = " + userBook.getReturn_dateStr() + " and get time = " + String.valueOf(userBook.getReturn_date().getTime()));
+            if (userBook.getReturn_date().getTime() != 0L
+                && (userBook.getIssue_date().compareTo(today)) <= 0 && (userBook.getReturn_date().compareTo(today)) >= 1) { // если это текущая аренда
                 model.addAttribute("isAvailable", false);
-                model.addAttribute("currentUserBook", currentUserBook);
-                model.addAttribute("lastUserBook", lastUserBook);
-                // countUsersStandingForBook -= 1; // убрать у кого книга в данный момент
-                model.addAttribute("countUsersStandingForBook", countUsersStandingForBook);
-                if (user.getId().equals( currentUserBook.getUser().getId() )){
-                    model.addAttribute("isBookInCurrentUser", true);
+                model.addAttribute("isLeasedBook", true);
+                model.addAttribute("currentUserBook", userBook);
+                if (user.getId().equals(userBook.getUser().getId())) { // если книга в аренде у текущего пользователя
+                    model.addAttribute("isBook_In_CurrentUser", true);
+                    model.addAttribute("idUserBook_Where_CurrentUser_Lease_Book", userBook.getId());
                 }
-            } else {
-                model.addAttribute("isAvailable", true);
+
+                if (user.isManager()) {
+                    model.addAttribute("idUserBook_CurrentLease", userBook.getId());
+                }
+            }
+            System.out.println("test1 " + String.valueOf(Long.valueOf(userBook.getReturn_date().getTime()) == 0L));
+            System.out.println("test2 " + String.valueOf((userBook.getIssue_date().compareTo(today))));
+            System.out.println("test3 " + String.valueOf(userBook.getIssue_date().getTime()));
+            System.out.println("test4 " + String.valueOf(today.getTime()));
+            // int result1 = userBook.getIssue_date().compareTo(today);
+            if (userBook.getReturn_date().getTime() == 0L) { // если это бронь  ( //  && (userBook.getIssue_date().compareTo(today)) >= 0 // и с сегодняшего дня и дальше ) 
+                countUsersStandingForBook += 1;
+                model.addAttribute("isAvailable", false);
+                System.out.println("current userbook is reserve");
+                if (user.getId().equals(userBook.getUser().getId())) { // если пользователь находится в очереди
+                    System.out.println("current user v ocheredi");
+                    model.addAttribute("is_CurrentUser_Standing_For_Book", true);
+                    model.addAttribute("idUserBook_Where_CurrentUser_Standing_For_Book", userBook.getId());
+                }
+                
             }
         }
+        model.addAttribute("countUsers_Standing_For_Book", countUsersStandingForBook);
+        System.out.println("countUsersStandingForBook is more that 1 = " + String.valueOf(countUsersStandingForBook >= 1));
+        if (user.isManager()) {
+            System.out.println("isManager = true");
+            List<UserBook> reserveList = userBookRepository.findReserveListByBookId(vendor_code);
+            System.out.println(String.valueOf(reserveList.size()));
+            if (reserveList.size() >= 1) {
+                UserBook firstReserve = reserveList.get(0);
+                model.addAttribute("idUserBook_FirstReserve", firstReserve.getId());
+                System.out.println("idUserBook_FirstReserve = " + String.valueOf(firstReserve.getId()));
+                model.addAttribute("currentUserBook", firstReserve);
+            }
+        }
+
+
+
+        // UserBook currentUserBook = null;
+        // UserBook lastUserBook = null;
+        // Date today = Calendar.getInstance().getTime();
+        // Date currentIssueDate = today;
+        // Date lastReturnDate = today;
+
+        // Long countUsersStandingForBook = 0L;
+        // for (UserBook userBook : userBooks) {
+        //     int result1 = userBook.getIssue_date().compareTo(currentIssueDate);
+        //     int result2 = userBook.getReturn_date().compareTo(lastReturnDate);
+        //     if (result1 < 0 && result2 >= 0){ // issue_date  is before  lastIssueDate   &&  return_date  is after or today  lastReturnDate
+        //         lastReturnDate = userBook.getReturn_date();
+        //         currentUserBook = userBook;
+        //         lastUserBook = userBook;
+        //     } else if (result1 >= 1 && result2 >= 0) { // issue_date  is after or today  lastIssueDate   &&  return_date  is after or today  lastReturnDate
+        //         lastUserBook = userBook; // идут уже те кто в очереди
+        //         countUsersStandingForBook++;
+        //         if (user.getId().equals(userBook.getUser().getId())){
+        //             model.addAttribute("isCurrentUserStandingForBook", true);
+        //             model.addAttribute("idUserBookWhereCurrentUserStandingForBook", userBook.getId());
+        //         }
+        //     }
+        // }
+
+        // model.addAttribute("isAvailable", true);
+        // model.addAttribute("isBookInCurrentUser", false);
+
+        // if (currentUserBook != null){
+        //     if (lastReturnDate.compareTo(today) >= 0){ // after or today
+        //         model.addAttribute("isAvailable", false);
+        //         model.addAttribute("currentUserBook", currentUserBook);
+        //         model.addAttribute("lastUserBook", lastUserBook);
+        //         // countUsersStandingForBook -= 1; // убрать у кого книга в данный момент
+        //         model.addAttribute("countUsersStandingForBook", countUsersStandingForBook);
+        //         if (user.getId().equals( currentUserBook.getUser().getId() )){
+        //             model.addAttribute("isBookInCurrentUser", true);
+        //             model.addAttribute("idUserBookWhereCurrentUserReserveBook", currentUserBook.getId());
+        //             //.............................................................................................................. idUserBookWhereCurrentUserReserveBook
+        //         }
+        //     } else {
+        //         model.addAttribute("isAvailable", true);
+        //     }
+        // }
 
         // Book book = repository.findByVendorCode(vendor_code);
         return "book/one";
@@ -258,36 +325,33 @@ public class BookController {
         User user = getCurrentUser();
         Book book = repository.findByVendorCode(vendor_code);
 
-        Calendar tomorrow = Calendar.getInstance();
-        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
-        UserBook userBook = userBookRepository.save(new UserBook(user, book, Calendar.getInstance().getTime(), tomorrow.getTime())); 
+        UserBook userBook = userBookRepository.save(new UserBook(user, book, Calendar.getInstance().getTime(), new Date(0))); 
         user.addUserBook(userBook);
         book.addUserBook(userBook);
-        repository.save(book);
         userRepository.save(user);
+        repository.save(book);
         return "redirect:/book/{vendor_code}";
     }
 
     // встать в очередь на книгу 
     @PostMapping("/{vendor_code}/to_stand_in_line")
-    public String toStandInLineForBook(@PathVariable("vendor_code") Long vendor_code, @RequestParam(value = "return_date_str") String return_date_str) throws ParseException {
+    public String toStandInLineForBook(@PathVariable("vendor_code") Long vendor_code) {
         User user = getCurrentUser();
         Book book = repository.findByVendorCode(vendor_code);
 
+        Calendar nextDayAfterLastReserve = Calendar.getInstance();
 
-        System.out.println("LOLOL " + return_date_str.toString());
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+        List<UserBook> reserveList = userBookRepository.findReserveListByBookId(vendor_code);
+        if (reserveList.size() >= 1){
+            UserBook lastReserve = reserveList.get(reserveList.size() - 1);
+            nextDayAfterLastReserve.setTime(lastReserve.getIssue_date());
+        }
+        nextDayAfterLastReserve.add(Calendar.DAY_OF_MONTH, 1);
 
-        Calendar tomorrowAfterLastUB = Calendar.getInstance();
-        tomorrowAfterLastUB.setTime(format.parse(return_date_str)); 
-        tomorrowAfterLastUB.add(Calendar.DAY_OF_MONTH, 1);
-        Calendar tomorrowAfterTomorrow = Calendar.getInstance();
-        tomorrowAfterTomorrow.setTime(tomorrowAfterLastUB.getTime());
-        tomorrowAfterTomorrow.add(Calendar.DAY_OF_MONTH, 1);
+        UserBook reserveUB = userBookRepository.save(new UserBook(user, book, nextDayAfterLastReserve.getTime(), new Date(0)));
 
-        UserBook userBook = userBookRepository.save(new UserBook(user, book, tomorrowAfterLastUB.getTime(), tomorrowAfterTomorrow.getTime())); 
-        user.addUserBook(userBook);
-        book.addUserBook(userBook);
+        user.addUserBook(reserveUB);
+        book.addUserBook(reserveUB);
         repository.save(book);
         userRepository.save(user);
         return "redirect:/book/{vendor_code}";
@@ -300,11 +364,53 @@ public class BookController {
         return "redirect:/book/{vendor_code}";
     }
 
-    private User getCurrentUser() {
-        String currentPrincipalName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByLogin(currentPrincipalName);
+    // продление аренды
+    @PostMapping("/{vendor_code}/extend_lease")
+    public String toExtendReserveBook(@PathVariable("vendor_code") Long vendor_code, @RequestParam(value = "user_book_id") Long user_book_id) {
+        User user = getCurrentUser();
+        Book book = repository.findByVendorCode(vendor_code);
+        UserBook currentUserBook = userBookRepository.findById(user_book_id).get();
+
+        // Set<UserBook> userBooks = book.getUserBooks();
+
+        // for (UserBook userBook : userBooks) {
+        //     int result1 = userBook.getIssue_date().compareTo(currentUserBook.getReturn_date());
+        //     if (result1 >= 1){ // issue_date  is after  currentUserBook.return_Date - все в очереди
+        //         System.out.print("LOLOLOL " + userBook.getIssue_dateStr() + " " + currentUserBook.getReturn_dateStr());
+        //         userBookRepository.deleteById(userBook.getId()); // не удаляет почему-то
+        //     }
+        // }
+
+        Calendar monthLater = Calendar.getInstance();
+        monthLater.add(Calendar.MONTH, 1);
+        currentUserBook.setReturn_date(monthLater.getTime());
+        userBookRepository.save(currentUserBook);
+
+        return "redirect:/book/{vendor_code}";
     }
 
+    // выдача аренды книги менеджером
+    @PostMapping("/{vendor_code}/lease_out")
+    public String leaseOut(@PathVariable("vendor_code") Long vendor_code, @RequestParam(value = "user_book_id") Long  user_book_id) {
+        System.out.println("user_book_id = " + String.valueOf(user_book_id));
+        UserBook currentUserBook = userBookRepository.findById(user_book_id).get();
+        Calendar monthLater = Calendar.getInstance();
+        monthLater.add(Calendar.MONTH, 1);
+        
+        currentUserBook.setIssue_date(Calendar.getInstance().getTime()); // today
+        currentUserBook.setReturn_date(monthLater.getTime());
+        userBookRepository.save(currentUserBook);
+        return "redirect:/book/{vendor_code}";
+    }
+
+    // снятие аренды менеджером
+    @PostMapping("/{vendor_code}/stop_lease")
+    public String stopLease(@PathVariable("vendor_code") Long vendor_code, @RequestParam(value = "user_book_id") Long  user_book_id) {
+        UserBook currentUserBook = userBookRepository.findById(user_book_id).get();
+        currentUserBook.setReturn_date(Calendar.getInstance().getTime()); // today
+        userBookRepository.save(currentUserBook);
+        return "redirect:/book/{vendor_code}";
+    }
     
 
     // получение формы для редактирования книги

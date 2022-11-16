@@ -8,7 +8,8 @@
     <title>Книги</title>
 </head>
 <body>
-    <a href="/book/new">Создать новую книгу</a>
+    <a class="mrgn_right" href="/">Назад</a>
+    <a class="inline" href="/book/new">Создать новую книгу</a>
     <hr>
     <div>
         <form th:method="get" th:action="@{/book/search}">
@@ -61,6 +62,14 @@
             <span th:text="${book.getTitle()}"></span> - <span th:text="${book.getVendorCode()}"></span>
         </a>
     </div>
+    <!-- <div> ПОМЕНЯТЬ
+        <h4>Должники:</h4>
+        <a>Aminov Arslan Gaynetdinovich - 1</a> c 
+        <span>11.11.2022</span> до <span>11.12.2022 </span>
+        <a href="/book/1">должен 
+            <span>Капитанская дочка</span> - <span>1</span>
+        </a>
+    </div> -->
 </body>
 <script>
     input_title = document.getElementById("input_title");

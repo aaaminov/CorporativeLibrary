@@ -1,5 +1,8 @@
 package com.aminov.corporativelibrary.controllers;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.websocket.server.PathParam;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.aminov.corporativelibrary.models.Role;
 import com.aminov.corporativelibrary.models.User;
+import com.aminov.corporativelibrary.models.UserBook;
 import com.aminov.corporativelibrary.repositories.RoleRepository;
+import com.aminov.corporativelibrary.repositories.UserBookRepository;
 import com.aminov.corporativelibrary.repositories.UserRepository;
 
 @Controller
@@ -23,17 +28,31 @@ import com.aminov.corporativelibrary.repositories.UserRepository;
 public class UserController {
 
     private final UserRepository repository;
+    private final UserBookRepository userBookRepository;
     private final RoleRepository roleRepository;
 
-    public UserController(UserRepository repository, RoleRepository roleRepository) {
+    public UserController(UserRepository repository, UserBookRepository userBookRepository, RoleRepository roleRepository) {
         this.repository = repository;
+        this.userBookRepository = userBookRepository;
         this.roleRepository = roleRepository;
     }
 
+    
     // получение всех пользователей
     @GetMapping()
     public String allUsers(Model model){
         model.addAttribute("users", repository.findAll());
+
+        List<UserBook> allUserBooks = userBookRepository.findListOrderByIssueDate();
+            List<UserBook> userBooks = new ArrayList<>();
+            Date today = Calendar.getInstance().getTime();
+            for (UserBook userBook : allUserBooks) {
+                if (userBook.getReturn_date().getTime() != 0L
+                && (userBook.getIssue_date().compareTo(today)) <= 0 && (userBook.getReturn_date().compareTo(today)) >= 1) { // если это текущая аренда
+                    userBooks.add(userBook);
+            }
+            }
+            model.addAttribute("userBooks", userBooks);
         return "user/all";
     }
     

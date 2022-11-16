@@ -15,7 +15,6 @@
             <label for="title">title: </label>
             <input name="title" type="text" id="input_title">
             <br>
-            <br>
             <label for="select_book_type">book_type: </label>
             <select name="book_type_id" id="select_book_type" required>
                 <option th:each="book_type : ${bookTypeList}"
@@ -50,7 +49,6 @@
                     th:text="${library.getName()}">name
                 </option>
             </select>
-            <br>
             <br>
             <input class="btn" type="submit" value="Создать">
         </form>

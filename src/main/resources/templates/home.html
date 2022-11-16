@@ -22,13 +22,23 @@
     <hr>
     <p sec:authorize="isAnonymous()">Привет, нажмите Войти, чтобы авторизоваться</span></p>
     <p sec:authorize="isAuthenticated()">Привет, <span sec:authentication="name"></span></p>
-    <br>
     <div th:if="${isAuthorized}">
         <a href="/book">Книги</a>
         <div th:if="${role_name == 'manager'}">
             <a href="/author">Авторы</a>
             <br>
             <a href="/user">Пользователи</a>
+        </div>
+        <br>
+        <div>
+            <span>Вам нужно сдать книги: </span>
+            <div th:each="userBook : ${userBooks}">
+                <a th:href="@{/book/{vendor_code}/ (vendor_code=${userBook.getBook().getVendorCode()})}">
+                    <span th:text="${userBook.getBook().getTitle()}"></span> - <span th:text="${userBook.getBook().getVendorCode()}"></span>
+                </a>
+                <span> до </span>
+                <span th:text="${userBook.getReturn_dateStr()}"></span>
+            </div>
         </div>
     </div>
 </body>

@@ -13,5 +13,19 @@
     <div th:each="user : ${users}">
         <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getFIO()}">fio</a>
     </div>
+    <div> <!-- ПОМЕНЯТЬ -->
+        <h4>Должники:</h4>
+        <div th:each="userBook : ${userBooks}">
+            <a th:href="@{/user/{id} (id=${userBook.getUser().getId()})}" th:text="${userBook.getUser().getFIO()}">fio</a>
+            <span> c </span>
+            <span th:text="${userBook.getIssue_dateStr()}"></span>
+            <span> до </span>
+            <span th:text="${userBook.getReturn_dateStr()}"></span>
+            <span> должен </span>
+            <a th:href="@{/book/{vendor_code}/ (vendor_code=${userBook.getBook().getVendorCode()})}">
+                <span th:text="${userBook.getBook().getTitle()}"></span> - <span th:text="${userBook.getBook().getVendorCode()}"></span>
+            </a>
+        </div>
+    </div>
 </body>
 </html>

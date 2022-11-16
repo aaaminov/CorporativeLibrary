@@ -13,7 +13,7 @@
     <div>
         <form th:method="patch" th:action="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}" >
             <label for="title">title: </label>
-            <input name="title" th:value="${title}" type="text" id="input_title">
+            <input name="title" th:value="${title}" type="text" id="input_title" required>
             <br>
             <br>
             <label for="select_book_type">book_type: </label>

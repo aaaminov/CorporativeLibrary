@@ -1,5 +1,10 @@
 package com.aminov.corporativelibrary.controllers;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aminov.corporativelibrary.models.User;
+import com.aminov.corporativelibrary.models.UserBook;
 import com.aminov.corporativelibrary.repositories.RoleRepository;
+import com.aminov.corporativelibrary.repositories.UserBookRepository;
 import com.aminov.corporativelibrary.repositories.UserRepository;
 
 @Controller
@@ -20,14 +27,16 @@ import com.aminov.corporativelibrary.repositories.UserRepository;
 public class MainController {
 
     private final UserRepository userRepository;
+    private final UserBookRepository userBookRepository;
     private final RoleRepository roleRepository;
 
 
-    public MainController(UserRepository userRepository, RoleRepository roleRepository) {
+    public MainController(UserRepository userRepository, UserBookRepository userBookRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.userBookRepository = userBookRepository;
         this.roleRepository = roleRepository;
     }
-    
+
     
     // главная страница
     @GetMapping("/")
@@ -44,6 +53,17 @@ public class MainController {
         } else {
             model.addAttribute("isAuthorized", true);
             model.addAttribute("role_name", user.getRole().getName());
+            
+            List<UserBook> allUserBooks = userBookRepository.findListByUserId(user.getId());
+            List<UserBook> userBooks = new ArrayList<>();
+            Date today = Calendar.getInstance().getTime();
+            for (UserBook userBook : allUserBooks) {
+                if (userBook.getReturn_date().getTime() != 0L
+                && (userBook.getIssue_date().compareTo(today)) <= 0 && (userBook.getReturn_date().compareTo(today)) >= 1) { // если это текущая аренда
+                    userBooks.add(userBook);
+            }
+            }
+            model.addAttribute("userBooks", userBooks);
         }
         return "home";
     }

@@ -11,33 +11,79 @@
 <body>
     <a href="/book/search">Назад</a>
     <hr>
-    <div th:if="${!isAvailable && !isBookInCurrentUser && !isCurrentUserStandingForBook}">
-        <h4 class="inline">Книга не доступна для аренды до <span th:text="${currentUserBook.getReturn_dateStr()}"></span></h4>
-        <h4 class="inline">. Ждущих в очереди - <span th:text="${countUsersStandingForBook}"></span></h4>
-        <form class="inline" th:method="post"  th:action="@{/book/{vendor_code}/to_stand_in_line (vendor_code=${book.getVendorCode()})}" >
-            <input type="hidden" name="return_date_str" th:value="${lastUserBook.getReturn_dateStr()}"/>
-            <input class="btn " type="submit" value="Встать в очередь"/>
-        </form>
+    <div th:if="${!isAvailable && isLeasedBook}">
+        <div th:if="${!isBook_In_CurrentUser}">
+            <h4 class="inline">Книга не доступна для аренды до <span th:text="${currentUserBook.getReturn_dateStr()}"></span></h4>
+            <h4 class="inline">. Ждущих в очереди - <span th:text="${countUsers_Standing_For_Book}"></span></h4>
+    
+            <div th:if="${!is_CurrentUser_Standing_For_Book}">
+                <form class="inline" th:method="post"  th:action="@{/book/{vendor_code}/to_stand_in_line (vendor_code=${book.getVendorCode()})}" >
+                    <!-- <input type="hidden" name="return_date_str" th:value="${lastUserBook.getReturn_dateStr()}"/> -->
+                    <input class="btn " type="submit" value="Встать в очередь"/>
+                </form>
+            </div>
+            <div th:if="${is_CurrentUser_Standing_For_Book}">
+                <form class="inline" th:method="post"  th:action="@{/book/{vendor_code}/to_stop_stand_in_line (vendor_code=${book.getVendorCode()})}" >
+                    <input type="hidden" name="user_book_id" th:value="${idUserBook_Where_CurrentUser_Standing_For_Book}"/>
+                    <input class="btn " type="submit" value="Выйти из очереди"/>
+                </form>
+            </div>
+    
+        </div>
+        <div th:if="${isBook_In_CurrentUser}">
+            <h4>Книга у вас в аренде c 
+                <span th:text="${currentUserBook.getIssue_dateStr()}"></span> до <span th:text="${currentUserBook.getReturn_dateStr()}"></span>
+            </h4>
+            <form class="inline" th:method="post"  th:action="@{/book/{vendor_code}/extend_lease (vendor_code=${book.getVendorCode()})}" >
+                <input type="hidden" name="user_book_id" th:value="${idUserBook_Where_CurrentUser_Lease_Book}"/>
+                <input class="btn " type="submit" value="Продлить"/>
+            </form>
+        </div>
     </div>
-    <div th:if="${!isAvailable && !isBookInCurrentUser && isCurrentUserStandingForBook}">
-        <h4 class="inline">Книга не доступна для аренды до <span th:text="${currentUserBook.getReturn_dateStr()}"></span></h4>
-        <h4 class="inline">. Ждущих в очереди - <span th:text="${countUsersStandingForBook}"></span></h4>
-        <form class="inline" th:method="post"  th:action="@{/book/{vendor_code}/to_stop_stand_in_line (vendor_code=${book.getVendorCode()})}" >
-            <input type="hidden" name="user_book_id" th:value="${idUserBookWhereCurrentUserStandingForBook}"/>
-            <input class="btn " type="submit" value="Выйти из очереди"/>
-        </form>
+
+    <div th:if="${user.isManager()}">
+        <div th:if="${!isLeasedBook && countUsers_Standing_For_Book >= 1}">
+            <h4>Книгу забронировал пользователь 
+                <a th:href="@{/user/{id} (id=${currentUserBook.getUser().getId()})}" th:text="${currentUserBook.getUser().getFIO()}">fio</a>
+                <span> c </span>
+                <span th:text="${currentUserBook.getIssue_dateStr()}"></span>
+                <span> до </span>
+                <span th:text="${currentUserBook.getReturn_dateStr()}"></span>
+            </h4>
+            <form th:method="post"  th:action="@{/book/{vendor_code}/lease_out (vendor_code=${book.getVendorCode()})}">
+                <input type="hidden" name="user_book_id" th:value="${idUserBook_FirstReserve}"/>
+                <input class="btn " type="submit" value="Выдать"/>
+            </form>
+        </div>
+        <div th:if="${!isAvailable && isLeasedBook}">
+            <h4>Книга в аренде у пользователя 
+                <a th:href="@{/user/{id} (id=${currentUserBook.getUser().getId()})}" th:text="${currentUserBook.getUser().getFIO()}">fio</a>
+                <span> c </span>
+                <span th:text="${currentUserBook.getIssue_dateStr()}"></span>
+                <span> до </span>
+                <span th:text="${currentUserBook.getReturn_dateStr()}"></span>
+            </h4>
+            <form th:method="post"  th:action="@{/book/{vendor_code}/stop_lease (vendor_code=${book.getVendorCode()})}">
+                <input type="hidden" name="user_book_id" th:value="${idUserBook_CurrentLease}"/>
+                <input class="btn " type="submit" value="Снять с пользователя"/>
+            </form>
+        </div>
     </div>
-    <div th:if="${isBookInCurrentUser}">
-        <h4>Книга у вас в аренде c 
-            <span th:text="${currentUserBook.getIssue_dateStr()}"></span> до <span th:text="${currentUserBook.getReturn_dateStr()}"></span>
-        </h4>
-    </div>
+    
     <div th:if="${isAvailable}">
-        <h4 class="inline">Книга доступна для аренды</h4>
+        <h4>Книга доступна для аренды</h4>
         <form th:method="post"  th:action="@{/book/{vendor_code}/reserve (vendor_code=${book.getVendorCode()})}">
             <input class="btn " type="submit" value="Забронировать на день"/>
         </form>
     </div>
+    <!-- <div th:if="${!isAvailable && !isLeasedBook}">
+        <h4>Убрать бронирование</h4>
+        <form th:method="post"  th:action="@{/book/{vendor_code}/reserve (vendor_code=${book.getVendorCode()})}">
+            <input class="btn " type="submit" value="Забронировать на день"/>
+        </form>
+    </div> -->
+
+
 
     <div>
         <p class="inline">Артикул: </p>
@@ -58,8 +104,8 @@
         <a class="inline" th:href="@{/genres/{id} (id=${genre.getId()})}" th:text="${genre.getName()}">name</a>
     </div>
     <br>
-    <!-- <a class="btn edit" th:href="@{/book/{vendor_code}/edit (vendor_code=${book.getVendorCode()})}">Изменить</a>
-    <form class="inline" th:method="delete" th:action="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}">
+    <a class="btn edit" th:href="@{/book/{vendor_code}/edit (vendor_code=${book.getVendorCode()})}">Изменить</a>
+    <!-- <form class="inline" th:method="delete" th:action="@{/book/{vendor_code} (vendor_code=${book.getVendorCode()})}">
         <input class="btn delete" type="submit" value="Удалить"/>
     </form> -->
     <hr>

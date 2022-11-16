@@ -143,6 +143,14 @@ public class User implements UserDetails{
         }
     }
 
+    public boolean isManager() {
+        if (role.getId() == 2){
+            return true;
+        }
+        return false;
+    }
+
+
     public Set<UserBook> getUserBooks() {
         return (this.user_books);
     }
